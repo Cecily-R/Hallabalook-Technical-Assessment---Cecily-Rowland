@@ -2,16 +2,6 @@
   <h1>Sneaker Head</h1>
 
   <div class="filters-container">
-    <!-- I've just noticed this filter is supposed to be a check box! I'm too short on time to remedy this now but definetly the first thing I would refactor -->
-
-    <select v-model="selectedBrand">
-      <option value="" disabled selected>Brands</option>
-      <option value="">All Brands</option>
-      <option v-for="brand in uniqueBrands" :key="brand" :value="brand">
-        {{ brand }}
-      </option>
-    </select>
-
     <select v-model="selectedAvailability">
       <option value="" disabled selected>Availability</option>
       <option value="">All Trainers</option>
@@ -34,6 +24,13 @@
     <div id="counter">
       <p>Results: {{ getFilteredCount() }}</p>
     </div>
+  </div>
+
+  <div id="brand-checkbox">
+    <label v-for="brand in uniqueBrands" :key="brand.id">
+      <input type="checkbox" v-model="selectedBrand" :value="brand" />
+      {{ brand }}
+    </label>
   </div>
 
   <div class="product-grid">
@@ -61,7 +58,7 @@ components: {
 export default {
   data() {
     return {
-      selectedBrand: '',
+      selectedBrand: [],
       selectedAvailability: '',
       selectedOrder: '',
       selectedRelevence: '',
@@ -77,22 +74,18 @@ export default {
     filteredShoes() {
       let shoes = this.products;
 
-      // I would also like to add more functionality in the filters. Right now you can order the brands and availabilty in conjunction, however I would implement the filters so that you can filter price and rank in conjunction with availability, and brand.
-
-      if (this.selectedBrand && this.selectedAvailability) {
-        return shoes.filter(
-          (product) =>
-            product.brand === this.selectedBrand &&
-            product.isAvailable === this.selectedAvailability
-        );
-      }
-
-      if (this.selectedBrand) {
-        return shoes.filter((shoe) => shoe.brand === this.selectedBrand);
+      if (this.selectedBrand.length != 0) {
+        shoes = shoes.filter((shoe) => this.selectedBrand.includes(shoe.brand));
       }
 
       if (this.selectedAvailability) {
-        return shoes.filter(
+        shoes = shoes.filter(
+          (product) => product.isAvailable === this.selectedAvailability
+        );
+      }
+
+      if (this.selectedAvailability) {
+        shoes = shoes.filter(
           (shoe) => shoe.isAvailable === this.selectedAvailability
         );
       }
