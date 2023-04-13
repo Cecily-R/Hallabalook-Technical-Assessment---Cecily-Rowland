@@ -16,11 +16,12 @@
 
     <select v-model="selectedRelevence">
       <option value="" disabled selected>Relevence</option>
+      <option value="unranked">Unranked</option>
       <option value="highest-ranking">Highest to Lowest Ranking</option>
+      <option value="lowest-ranking">Lowest to Highest Ranking</option>
     </select>
 
     <!-- // I know this is a bit of a misnomer falling in the filter container! This is for CSS purposes. I'd definately refactor this too and find a better way of lining these up so the names are all correct and indicative of what the elements are actually doing  -->
-
     <div id="counter">
       <p>Results: {{ getFilteredCount() }}</p>
     </div>
@@ -96,8 +97,17 @@ export default {
         shoes.sort((a, b) => b.price - a.price);
       }
 
+      // I've removed the shoe without a rank. I would usually ask for clarification on what to do here rather than make an assumption.
       if (this.selectedRelevence) {
+        shoes = shoes.filter((shoe) => shoe.rank > 0);
+      }
+
+      if (this.selectedRelevence === 'highest-ranking') {
+        shoes.sort((a, b) => a.rank - b.rank);
+      } else if (this.selectedRelevence === 'lowest-ranking') {
         shoes.sort((a, b) => b.rank - a.rank);
+      } else {
+        shoes = this.products;
       }
 
       return shoes;
