@@ -107,6 +107,7 @@ export default {
       } else if (this.selectedRelevence === 'lowest-ranking') {
         shoes.sort((a, b) => b.rank - a.rank);
       } else {
+        // I'm aware this is a bit of a bug as it doesn't allow any other filters to be applied when unranked is pressed as it returns shoes to its origional state.
         shoes = this.products;
       }
 
@@ -158,6 +159,12 @@ select {
   max-width: 300px;
   box-sizing: border-box;
   margin-left: 2%;
+  margin-bottom: 2%;
+}
+
+#brand-checkbox {
+  font-family: nunito;
+  margin-left: 8%;
   margin-bottom: 2%;
 }
 
